@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>grid grinder</title>
+    <link rel="stylesheet" href="styles.css" media="screen" title="no title" charset="utf-8">
+</head>
+
+<body>
+    <div id="user">
+        <h1>Enter Your Name:</h1>
+        <form class="user-form">
+            <input type="text" id="name" name="name" placeholder="name">
+            <button type="button" id="start">Start</button>
+        </form>
+    </div>
+
+    <div id="game">
+
+        <div id="character">
+            <div id="char-name"></div>
+            <div id="position">
+                <div class="coords" id="x">
+                    <h1>0,</h1>
+                </div>
+                <div class='coords' id="y">
+                    <h1>0</h1>
+                </div>
+            </div>
+        </div>
+        <div id="buttons">
+            <button type="button" id="up">UP</button>
+            <button type="button" id="down">DOWN</button>
+            <button type="button" id="left">LEFT</button>
+            <button type="button" id="right">RIGHT</button>
+        </div>
+    </div>
+
+
+    <script src="http://underscorejs.org/underscore-min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="http://backbonejs.org/backbone-min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
