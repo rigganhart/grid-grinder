@@ -8,18 +8,24 @@
 </head>
 
 <body>
-    <div id="user">
-        <h1>Enter Your Name:</h1>
-        <form class="user-form">
-            <input type="text" id="name" name="name" placeholder="name">
-            <button type="button" id="start">Start</button>
-        </form>
+    <div id="user" class="hidden">
+        <div class="user">
+            <h1>Enter Your Name:</h1>
+            <form class="user-form">
+                <input type="text" id="name" name="name" placeholder="name">
+                <h3>Choose your Character size:</h3>
+                <input type="text" id="size" name="size" placeholder="large or small">
+                <button type="button" id="start"><a href="#agame">Choose</a></button>
+            </form>
+        </div>
     </div>
 
-    <div id="game">
+    <div id="game" class="hidden">
+        <div class="game">
+          <a href="#anew">Create a new player</a>
 
-        <div id="character">
-            <div id="char-name"></div>
+            <div id="character" class="character">
+            </div>
             <div id="position">
                 <div class="coords" id="x">
                     <h1>0,</h1>
@@ -28,15 +34,24 @@
                     <h1>0</h1>
                 </div>
             </div>
-        </div>
-        <div id="buttons">
-            <button type="button" id="up">UP</button>
-            <button type="button" id="down">DOWN</button>
-            <button type="button" id="left">LEFT</button>
-            <button type="button" id="right">RIGHT</button>
+
+
+            <div id="buttons">
+                <button type="button" id="up">UP</button>
+                <button type="button" id="down">DOWN</button>
+                <button type="button" id="left">LEFT</button>
+                <button type="button" id="right">RIGHT</button>
+            </div>
+            <a href="#over">Game Over</a>
         </div>
     </div>
-
+    <div id="game-over" class="hidden">
+      <div class="end">
+        <h1>GameOver</h1>
+        <h2>Bwahahahahaha</h2>
+        <a href="#anew">Try Again !</a>
+      </div>
+    </div>
 
     <script src="http://underscorejs.org/underscore-min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>

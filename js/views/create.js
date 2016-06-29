@@ -1,3 +1,5 @@
+// let GameModel = require('../models/model');
+
 module.exports = Backbone.View.extend({
 
     initialize: function() {
@@ -12,13 +14,11 @@ module.exports = Backbone.View.extend({
 
 
     clickStart: function() {
-        let user = this.el.querySelector('#name').value;
-        console.log(user);
-        this.model.start();
+        this.model.choose();
     },
+
     render: function() {
-        // let user = this.el.querySelector('#name');
-
-
+        let newPlayer = document.getElementById('character');
+        newPlayer.textContent = `${this.model.get('name')} Energy:${this.model.get('energy')}`;
     },
 });

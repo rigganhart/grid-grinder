@@ -1,3 +1,6 @@
+// let GameModel = require('../models/model');
+
+
 module.exports = Backbone.View.extend({
 
   initialize: function () {
@@ -9,6 +12,7 @@ module.exports = Backbone.View.extend({
       'click #down': 'clickDown',
       'click #left': 'clickLeft',
       'click #right': 'clickRight',
+      'click button': 'changeEnergy',
     },
 
     clickUp: function(){
@@ -28,6 +32,11 @@ module.exports = Backbone.View.extend({
       this.model.right();
     },
 
+    changeEnergy: function(){
+      console.log('decrease');
+        this.model.decreaseEnergy();
+
+    },
 
 
 

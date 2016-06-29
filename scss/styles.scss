@@ -1,22 +1,27 @@
-div#user{
-  width: 30%;
+.hidden{
+  display: none;
+}
+
+.user{
+  width: 60%;
   height:400px;
   display: inline-block;
   background-color: blue;
+  margin: 0 auto;
 }
-div#game{
+.game{
   width:60%;
   height:400px;
   display: inline-block;
   background-color: green;
-  float: right;
+  margin: 0 auto;
 }
 
 .coords{
   display: inline-block;
 
 }
-div#character{
+.character{
   display: inline-block;
   margin: 20%;
 }
