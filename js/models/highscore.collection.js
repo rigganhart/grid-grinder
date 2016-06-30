@@ -1,9 +1,9 @@
-
 let HighScore = require('./highscore');
 
 module.exports = Backbone.Collection.extend({
-  url:'http://grid.queencityiron.com/api/highscore',
-  model: HighScore,
-
-
+    url: 'http://grid.queencityiron.com/api/highscore',
+    model: HighScore,
+    getHighscoreFromServer: function() {
+        this.fetch();
+    },
 });

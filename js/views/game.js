@@ -13,6 +13,7 @@ module.exports = Backbone.View.extend({
       'click #left': 'clickLeft',
       'click #right': 'clickRight',
       'click button': 'changeEnergy',
+      'click #newPlayer': 'startOver',
     },
 
     clickUp: function(){
@@ -37,7 +38,9 @@ module.exports = Backbone.View.extend({
         this.model.decreaseEnergy();
         this.model.changeMoves();
     },
-
+    startOver: function(){
+      this.trigger('create', this.model);
+    },
 
 
     render: function(){

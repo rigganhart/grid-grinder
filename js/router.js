@@ -2,7 +2,6 @@ let CreateView = require('./views/create');
 let GameView = require('./views/game');
 let GameModel = require('./models/model');
 let GameOver = require('./views/gameover');
-let HighScore = require('./models/highscore.collection')
 
 module.exports = Backbone.Router.extend({
     initialize: function() {
@@ -26,7 +25,12 @@ module.exports = Backbone.Router.extend({
         stuff.on('death', function(stuff){
           that.navigate('over', {trigger: true});
         });
-
+        this.user.on('start', function(stuff){
+          that.navigate('agame', {trigger: true});
+        });
+        this.game.on('create', function(stuff){
+          that.navigate('anew', {trigger:true});
+        })
     },
 
     routes: {
@@ -41,7 +45,7 @@ module.exports = Backbone.Router.extend({
         this.user.el.classList.remove('hidden');
         this.game.el.classList.add('hidden');
         this.endGame.el.classList.add('hidden');
-
+        this.trigger('load', this.model);
     },
 
     gameStart: function() {
@@ -56,15 +60,6 @@ module.exports = Backbone.Router.extend({
         this.endGame.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.game.el.classList.add('hidden');
-        let self = this;
-        let scoreList = new HighScore();
-        scoreList.fetch({
-          url:"http://grid.queencityiron.com/api/highscore",
-          success: function(){
-            self.endGame.model = scoreList;
-            self.endGame.render();
-          }
-        });
     },
 
 });
