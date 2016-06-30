@@ -16,7 +16,21 @@
   background-color: green;
   margin: 0 auto;
 }
-
+.end{
+  width: 60%;
+  height:400px;
+  display: inline-block;
+  background-color: black;
+  margin: 0 auto;
+  color: white;
+}
+.end h2{
+  color: red;
+}
+.end a {
+  text-decoration: none;
+  color: white
+}
 .coords{
   display: inline-block;
 
@@ -28,4 +42,15 @@
 .user-form{
   display: inline-block;
   margin-left: 15%;
+}
+#position{
+  display: inline-block;
+}
+.newPlayer{
+  display: inline-block;
+  float: right;
+}
+#buttons{
+  display: inline-block;
+  float: left;
 }

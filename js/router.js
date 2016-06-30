@@ -2,11 +2,12 @@ let CreateView = require('./views/create');
 let GameView = require('./views/game');
 let GameModel = require('./models/model');
 let GameOver = require('./views/gameover');
+let HighScore = require('./models/higscore')
 
 module.exports = Backbone.Router.extend({
     initialize: function() {
         let stuff = new GameModel();
-        let that = this
+        let that = this;
 
         this.user = new CreateView({
             model: stuff,
@@ -23,9 +24,9 @@ module.exports = Backbone.Router.extend({
             el: document.getElementById('game-over'),
         });
         stuff.on('death', function(stuff){
-
           that.navigate('over', {trigger: true});
         });
+        
     },
 
     routes: {
@@ -55,6 +56,15 @@ module.exports = Backbone.Router.extend({
         this.endGame.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.game.el.classList.add('hidden');
+        let self = this;
+        let scoreList = new HighScore();
+        scoreList.fetch({
+          url:"",
+          success: function(){
+            self.gameOver.model = scoreList;
+            self.gameOver.render();
+          }
+        });
     },
 
 });

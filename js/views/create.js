@@ -8,10 +8,14 @@ module.exports = Backbone.View.extend({
 
     events: {
 
+        'click #saveName': 'saveName',
+        'click #start': 'clickStart',
 
-        'click button': 'clickStart',
     },
-
+    saveName: function(){
+        this.model.saveUserName();
+        
+    },
 
     clickStart: function() {
         this.model.choose();

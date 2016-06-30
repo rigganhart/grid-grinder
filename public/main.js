@@ -8,9 +8,32 @@ window.addEventListener('load', function(){
   Backbone.history.start();
 });
 
-},{"./router":3}],2:[function(require,module,exports){
+},{"./router":4}],2:[function(require,module,exports){
 module.exports = Backbone.Model.extend({
-    // url:'/',
+
+  defaults: {
+    name: "player",
+    score: 2,
+    playerType: "tiny",
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+});
+
+},{}],3:[function(require,module,exports){
+module.exports = Backbone.Model.extend({
+    url:'http://grid.queencityiron.com/api/players',
 
 
     defaults: {
@@ -61,6 +84,9 @@ module.exports = Backbone.Model.extend({
           }
 
     },
+    changeMoves: function(){
+        this.set('moves', this.get('moves')+1)
+    },
 
     choose: function() {
         let user = {
@@ -73,6 +99,8 @@ module.exports = Backbone.Model.extend({
         };
         if (user.size === "large") {
             user.energy = 15
+        } else if(user.size === "hulk"){
+          user.energy = 500
         }
         console.log('clicked');
         console.log(`user: ${user.name} size: ${user.size} energy: ${user.energy}`);
@@ -80,26 +108,29 @@ module.exports = Backbone.Model.extend({
         this.set('size', user.size);
         this.set('energy', user.energy);
         this.set('moves', user.moves);
-
-        // this.save();
+      // this.save();
     },
-
+    saveUser: function(){
+      let newName = documetn.getElementById('name').value;
+      this.set('name', newName)
+    },
 
 
 
 
 });
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 let CreateView = require('./views/create');
 let GameView = require('./views/game');
 let GameModel = require('./models/model');
 let GameOver = require('./views/gameover');
+let HighScore = require('./models/higscore')
 
 module.exports = Backbone.Router.extend({
     initialize: function() {
         let stuff = new GameModel();
-        let that = this
+        let that = this;
 
         this.user = new CreateView({
             model: stuff,
@@ -116,9 +147,9 @@ module.exports = Backbone.Router.extend({
             el: document.getElementById('game-over'),
         });
         stuff.on('death', function(stuff){
-
           that.navigate('over', {trigger: true});
         });
+        
     },
 
     routes: {
@@ -148,11 +179,20 @@ module.exports = Backbone.Router.extend({
         this.endGame.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.game.el.classList.add('hidden');
+        let self = this;
+        let scoreList = new HighScore();
+        scoreList.fetch({
+          url:"",
+          success: function(){
+            self.gameOver.model = scoreList;
+            self.gameOver.render();
+          }
+        });
     },
 
 });
 
-},{"./models/model":2,"./views/create":4,"./views/game":5,"./views/gameover":6}],4:[function(require,module,exports){
+},{"./models/higscore":2,"./models/model":3,"./views/create":5,"./views/game":6,"./views/gameover":7}],5:[function(require,module,exports){
 // let GameModel = require('../models/model');
 
 module.exports = Backbone.View.extend({
@@ -163,10 +203,14 @@ module.exports = Backbone.View.extend({
 
     events: {
 
+        'click #saveName': 'saveName',
+        'click #start': 'clickStart',
 
-        'click button': 'clickStart',
     },
-
+    saveName: function(){
+        this.model.saveUserName();
+        
+    },
 
     clickStart: function() {
         this.model.choose();
@@ -178,7 +222,7 @@ module.exports = Backbone.View.extend({
     },
 });
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // let GameModel = require('../models/model');
 
 
@@ -216,24 +260,27 @@ module.exports = Backbone.View.extend({
     changeEnergy: function(){
       console.log('decrease');
         this.model.decreaseEnergy();
-
+        this.model.changeMoves();
     },
 
 
 
     render: function(){
       let x = this.el.querySelector('#x');
-      x.textContent = this.model.get('x');
+      x.textContent = this.model.get('x')+",";
 
       let y = this.el.querySelector('#y');
       y.textContent = this.model.get('y');
+
+      let newMoves = this.el.querySelector('#moves');
+      newMoves.textContent = "Moves:" + this.model.get('moves');
     }
 
 
 
 });
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 let GameModel = require('../models/model');
 
 
@@ -244,18 +291,20 @@ module.exports = Backbone.View.extend({
     },
 
     events: {
+      'click #add-scores': 'addScore',
 
-      
     },
 
-    lose: function(){
+    addScore: function(){
 
 
     },
 
     render: function(){
+      let highScores = this.el.querySelector('#score-list');
 
+      highScores.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
     }
 });
 
-},{"../models/model":2}]},{},[1])
+},{"../models/model":3}]},{},[1])

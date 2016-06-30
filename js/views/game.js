@@ -35,17 +35,20 @@ module.exports = Backbone.View.extend({
     changeEnergy: function(){
       console.log('decrease');
         this.model.decreaseEnergy();
-
+        this.model.changeMoves();
     },
 
 
 
     render: function(){
       let x = this.el.querySelector('#x');
-      x.textContent = this.model.get('x');
+      x.textContent = this.model.get('x')+",";
 
       let y = this.el.querySelector('#y');
       y.textContent = this.model.get('y');
+
+      let newMoves = this.el.querySelector('#moves');
+      newMoves.textContent = "Moves:" + this.model.get('moves');
     }
 
 

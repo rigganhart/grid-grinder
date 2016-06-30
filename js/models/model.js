@@ -1,5 +1,5 @@
 module.exports = Backbone.Model.extend({
-    // url:'/',
+    url:'http://grid.queencityiron.com/api/players',
 
 
     defaults: {
@@ -50,6 +50,9 @@ module.exports = Backbone.Model.extend({
           }
 
     },
+    changeMoves: function(){
+        this.set('moves', this.get('moves')+1)
+    },
 
     choose: function() {
         let user = {
@@ -62,6 +65,8 @@ module.exports = Backbone.Model.extend({
         };
         if (user.size === "large") {
             user.energy = 15
+        } else if(user.size === "hulk"){
+          user.energy = 500
         }
         console.log('clicked');
         console.log(`user: ${user.name} size: ${user.size} energy: ${user.energy}`);
@@ -69,10 +74,12 @@ module.exports = Backbone.Model.extend({
         this.set('size', user.size);
         this.set('energy', user.energy);
         this.set('moves', user.moves);
-
-        // this.save();
+      // this.save();
     },
-
+    saveUser: function(){
+      let newName = documetn.getElementById('name').value;
+      this.set('name', newName)
+    },
 
 
 

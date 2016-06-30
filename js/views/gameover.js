@@ -8,16 +8,18 @@ module.exports = Backbone.View.extend({
     },
 
     events: {
+      'click #add-scores': 'addScore',
 
-      
     },
 
-    lose: function(){
+    addScore: function(){
 
 
     },
 
     render: function(){
+      let highScores = this.el.querySelector('#score-list');
 
+      highScores.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
     }
 });
