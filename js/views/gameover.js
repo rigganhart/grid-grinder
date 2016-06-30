@@ -13,7 +13,7 @@ module.exports = Backbone.View.extend({
     },
 
     addScore: function(){
-
+      this.model.sendScore();
 
     },
 

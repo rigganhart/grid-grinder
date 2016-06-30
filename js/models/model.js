@@ -1,5 +1,9 @@
+
+let HighScore = require("./highscore");
+
+
 module.exports = Backbone.Model.extend({
-    url:'http://grid.queencityiron.com/api/players',
+    // url:'http://grid.queencityiron.com/api/players',
 
 
     defaults: {
@@ -57,9 +61,9 @@ module.exports = Backbone.Model.extend({
     choose: function() {
         let user = {
             name: document.getElementById('name').value,
-            size: document.getElementById('size').value,
+            playerType: document.getElementById('size').value,
             energy: 10,
-            moves: 0,
+            score: 0,
             x: 0,
             y: 0,
         };
@@ -71,17 +75,26 @@ module.exports = Backbone.Model.extend({
         console.log('clicked');
         console.log(`user: ${user.name} size: ${user.size} energy: ${user.energy}`);
         this.set('name', user.name);
-        this.set('size', user.size);
+        this.set('playerType', user.playerType);
         this.set('energy', user.energy);
-        this.set('moves', user.moves);
+        this.set('score', user.score);
       // this.save();
     },
-    saveUser: function(){
-      let newName = documetn.getElementById('name').value;
+    saveUserName: function(){
+      let newName = document.getElementById('name').value;
       this.set('name', newName)
     },
 
+    getPlayers: function(){
 
-
+    },
+    sendScore: function(){
+      let highscore = new HighScore({
+        name: this.get('name'),
+        score: this.get('score'),
+        playerType: this.get('playerType')
+      });
+      highscore.save();
+    },
 
 });

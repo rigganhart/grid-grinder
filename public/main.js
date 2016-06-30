@@ -8,32 +8,39 @@ window.addEventListener('load', function(){
   Backbone.history.start();
 });
 
-},{"./router":4}],2:[function(require,module,exports){
-module.exports = Backbone.Model.extend({
+},{"./router":5}],2:[function(require,module,exports){
 
-  defaults: {
-    name: "player",
-    score: 2,
-    playerType: "tiny",
-  }
+let HighScore = require('./highscore');
 
-
-
-
-
-
-
-
-
-
-
+module.exports = Backbone.Collection.extend({
+  url:'http://grid.queencityiron.com/api/highscore',
+  model: HighScore,
 
 
 });
 
-},{}],3:[function(require,module,exports){
+},{"./highscore":3}],3:[function(require,module,exports){
+
+
 module.exports = Backbone.Model.extend({
-    url:'http://grid.queencityiron.com/api/players',
+
+url:'http://grid.queencityiron.com/api/highscore',
+
+defaults: {
+  name:"",
+  score: 0,
+  playerType:"",
+}
+
+});
+
+},{}],4:[function(require,module,exports){
+
+let HighScore = require("./highscore");
+
+
+module.exports = Backbone.Model.extend({
+    // url:'http://grid.queencityiron.com/api/players',
 
 
     defaults: {
@@ -91,9 +98,9 @@ module.exports = Backbone.Model.extend({
     choose: function() {
         let user = {
             name: document.getElementById('name').value,
-            size: document.getElementById('size').value,
+            playerType: document.getElementById('size').value,
             energy: 10,
-            moves: 0,
+            score: 0,
             x: 0,
             y: 0,
         };
@@ -105,27 +112,36 @@ module.exports = Backbone.Model.extend({
         console.log('clicked');
         console.log(`user: ${user.name} size: ${user.size} energy: ${user.energy}`);
         this.set('name', user.name);
-        this.set('size', user.size);
+        this.set('playerType', user.playerType);
         this.set('energy', user.energy);
-        this.set('moves', user.moves);
+        this.set('score', user.score);
       // this.save();
     },
-    saveUser: function(){
-      let newName = documetn.getElementById('name').value;
+    saveUserName: function(){
+      let newName = document.getElementById('name').value;
       this.set('name', newName)
     },
 
+    getPlayers: function(){
 
-
+    },
+    sendScore: function(){
+      let highscore = new HighScore({
+        name: this.get('name'),
+        score: this.get('score'),
+        playerType: this.get('playerType')
+      });
+      highscore.save();
+    },
 
 });
 
-},{}],4:[function(require,module,exports){
+},{"./highscore":3}],5:[function(require,module,exports){
 let CreateView = require('./views/create');
 let GameView = require('./views/game');
 let GameModel = require('./models/model');
 let GameOver = require('./views/gameover');
-let HighScore = require('./models/higscore')
+let HighScore = require('./models/highscore.collection')
 
 module.exports = Backbone.Router.extend({
     initialize: function() {
@@ -149,7 +165,7 @@ module.exports = Backbone.Router.extend({
         stuff.on('death', function(stuff){
           that.navigate('over', {trigger: true});
         });
-        
+
     },
 
     routes: {
@@ -182,17 +198,17 @@ module.exports = Backbone.Router.extend({
         let self = this;
         let scoreList = new HighScore();
         scoreList.fetch({
-          url:"",
+          url:"http://grid.queencityiron.com/api/highscore",
           success: function(){
-            self.gameOver.model = scoreList;
-            self.gameOver.render();
+            self.endGame.model = scoreList;
+            self.endGame.render();
           }
         });
     },
 
 });
 
-},{"./models/higscore":2,"./models/model":3,"./views/create":5,"./views/game":6,"./views/gameover":7}],5:[function(require,module,exports){
+},{"./models/highscore.collection":2,"./models/model":4,"./views/create":6,"./views/game":7,"./views/gameover":8}],6:[function(require,module,exports){
 // let GameModel = require('../models/model');
 
 module.exports = Backbone.View.extend({
@@ -208,6 +224,7 @@ module.exports = Backbone.View.extend({
 
     },
     saveName: function(){
+      console.log('clicked saved name');
         this.model.saveUserName();
         
     },
@@ -222,7 +239,7 @@ module.exports = Backbone.View.extend({
     },
 });
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 // let GameModel = require('../models/model');
 
 
@@ -280,7 +297,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 let GameModel = require('../models/model');
 
 
@@ -296,7 +313,7 @@ module.exports = Backbone.View.extend({
     },
 
     addScore: function(){
-
+      this.model.sendScore();
 
     },
 
@@ -307,4 +324,4 @@ module.exports = Backbone.View.extend({
     }
 });
 
-},{"../models/model":3}]},{},[1])
+},{"../models/model":4}]},{},[1])

@@ -13,6 +13,7 @@ module.exports = Backbone.View.extend({
 
     },
     saveName: function(){
+      console.log('clicked saved name');
         this.model.saveUserName();
         
     },

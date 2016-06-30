@@ -2,7 +2,7 @@ let CreateView = require('./views/create');
 let GameView = require('./views/game');
 let GameModel = require('./models/model');
 let GameOver = require('./views/gameover');
-let HighScore = require('./models/higscore')
+let HighScore = require('./models/highscore.collection')
 
 module.exports = Backbone.Router.extend({
     initialize: function() {
@@ -26,7 +26,7 @@ module.exports = Backbone.Router.extend({
         stuff.on('death', function(stuff){
           that.navigate('over', {trigger: true});
         });
-        
+
     },
 
     routes: {
@@ -59,10 +59,10 @@ module.exports = Backbone.Router.extend({
         let self = this;
         let scoreList = new HighScore();
         scoreList.fetch({
-          url:"",
+          url:"http://grid.queencityiron.com/api/highscore",
           success: function(){
-            self.gameOver.model = scoreList;
-            self.gameOver.render();
+            self.endGame.model = scoreList;
+            self.endGame.render();
           }
         });
     },
