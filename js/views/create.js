@@ -5,7 +5,6 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.model.types.on('newtypes', this.render, this);
-        this.model.on('load',this.render,this);
         this.model.getPlayers();
     },
 
@@ -18,18 +17,20 @@ module.exports = Backbone.View.extend({
 
 
     startGame: function(event) {
-      console.log(event.target.textContent);
-        this.trigger('start', this.model);
+      // console.log(event.target.textContent);
+      this.model.setPlayer();
+      this.trigger('start', this.model);
     },
 
 
     render: function() {
       let listOfTypes =  this.el.querySelector('#playerType');
-      console.log(this.model.types);
+      listOfTypes.innerHTML="";
       this.model.types.forEach(function(element){
-        console.log(element.get('name'));
         let button = document.createElement('button');
         button.textContent = element.get('name');
+        button.id = element.get('name');
+
         listOfTypes.appendChild(button);
       });
 

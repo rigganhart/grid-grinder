@@ -52,6 +52,9 @@ module.exports = Backbone.View.extend({
 
       let newMoves = this.el.querySelector('#moves');
       newMoves.textContent = "Moves:" + this.model.get('moves');
+
+      let character = this.el.querySelector('#character');
+      character.textContent = `Name: ${this.model.get('name')} Player Type:${this.model.get('playerType')}`
     }
 
 

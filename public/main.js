@@ -96,36 +96,16 @@ module.exports = Backbone.Model.extend({
         this.set('moves', this.get('moves')+1)
     },
 
-    choose: function() {
-        let user = {
-            name: document.getElementById('name').value,
-            playerType: document.getElementById('playerType').value,
-            energy: 0,
-            score: 0,
-            x: 0,
-            y: 0,
-        };
-        if (user.size === "large") {
-            user.energy = 15
-        } else if(user.size === "hulk"){
-          user.energy = 500
-        }
-        console.log('clicked');
-        console.log(`user: ${user.name} playerType: ${user.PlayerType} energy: ${user.energy}`);
-        this.set('name', user.name);
-        this.set('playerType', user.playerType);
-        this.set('energy', user.energy);
-        this.set('score', user.score);
-      // this.save();
-    },
-    saveUserName: function(){
-      let newName = document.getElementById('name').value;
-      this.set('name', newName)
+    setPlayer: function(){
+      this.set('name', document.getElementById('name').value);
+      this.set('playerType', event.target.textContent)
+// luke wrote this:
+      let target = this.types.find(function (type) {
+        return type.get('name') === event.target.textContent;
+      });
     },
 
     getPlayers: function(){
-      console.log('look to collection for players');
-      // this.types = new PlayerTypes();
       this.types.getPlayersFromserver();
     },
     sendScore: function(){
@@ -149,11 +129,8 @@ module.exports = Backbone.Collection.extend({
 
     getPlayersFromserver: function() {
       let self = this;
-      console.log('look to server for players');
         this.fetch({
           success: function(){
-            console.log('we got some players from the server!');
-            console.log(self);
             self.trigger('newtypes', this.model);
           }
         });
@@ -248,7 +225,6 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.model.types.on('newtypes', this.render, this);
-        this.model.on('load',this.render,this);
         this.model.getPlayers();
     },
 
@@ -261,18 +237,20 @@ module.exports = Backbone.View.extend({
 
 
     startGame: function(event) {
-      console.log(event.target.textContent);
-        this.trigger('start', this.model);
+      // console.log(event.target.textContent);
+      this.model.setPlayer();
+      this.trigger('start', this.model);
     },
 
 
     render: function() {
       let listOfTypes =  this.el.querySelector('#playerType');
-      console.log(this.model.types);
+      listOfTypes.innerHTML="";
       this.model.types.forEach(function(element){
-        console.log(element.get('name'));
         let button = document.createElement('button');
         button.textContent = element.get('name');
+        button.id = element.get('name');
+
         listOfTypes.appendChild(button);
       });
 
@@ -335,6 +313,9 @@ module.exports = Backbone.View.extend({
 
       let newMoves = this.el.querySelector('#moves');
       newMoves.textContent = "Moves:" + this.model.get('moves');
+
+      let character = this.el.querySelector('#character');
+      character.textContent = `Name: ${this.model.get('name')} Player Type:${this.model.get('playerType')}`
     }
 
 

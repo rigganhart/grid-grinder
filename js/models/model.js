@@ -59,36 +59,16 @@ module.exports = Backbone.Model.extend({
         this.set('moves', this.get('moves')+1)
     },
 
-    choose: function() {
-        let user = {
-            name: document.getElementById('name').value,
-            playerType: document.getElementById('playerType').value,
-            energy: 0,
-            score: 0,
-            x: 0,
-            y: 0,
-        };
-        if (user.size === "large") {
-            user.energy = 15
-        } else if(user.size === "hulk"){
-          user.energy = 500
-        }
-        console.log('clicked');
-        console.log(`user: ${user.name} playerType: ${user.PlayerType} energy: ${user.energy}`);
-        this.set('name', user.name);
-        this.set('playerType', user.playerType);
-        this.set('energy', user.energy);
-        this.set('score', user.score);
-      // this.save();
-    },
-    saveUserName: function(){
-      let newName = document.getElementById('name').value;
-      this.set('name', newName)
+    setPlayer: function(){
+      this.set('name', document.getElementById('name').value);
+      this.set('playerType', event.target.textContent)
+// luke wrote this:
+      let target = this.types.find(function (type) {
+        return type.get('name') === event.target.textContent;
+      });
     },
 
     getPlayers: function(){
-      console.log('look to collection for players');
-      // this.types = new PlayerTypes();
       this.types.getPlayersFromserver();
     },
     sendScore: function(){
