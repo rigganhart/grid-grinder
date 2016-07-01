@@ -50,3 +50,8 @@
 #buttons {
   display: inline-block;
   float: left; }
+
+.grid {
+  background-color: grey;
+  height: 250px;
+  width: 250px; }

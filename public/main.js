@@ -35,86 +35,89 @@ defaults: {
 });
 
 },{}],4:[function(require,module,exports){
-
 let HighScores = require("./highscore.collection");
 let PlayerTypes = require("./types")
 
 module.exports = Backbone.Model.extend({
 
-    initialize: function(){
-      this.types = new PlayerTypes();
+    initialize: function() {
+        this.types = new PlayerTypes();
     },
     defaults: {
-
+        gamesize: 10,
         name: "DumDum",
-        playerType:"",
+        playerType: "",
+        startingEnergy: 0,
+        energyPerMove: 0,
         score: 0,
         x: 0,
         y: 0,
     },
 
     up: function() {
-      if(this.get('y') < 10){
-        this.set('y', this.get('y') + 1);
-      };
+        if (this.get('y') < 10) {
+            this.set('y', this.get('y') + 1);
+        };
     },
 
     down: function() {
-      if(this.get('y') > 0){
-        this.set('y', this.get('y') - 1);
-      };
+        if (this.get('y') > 0) {
+            this.set('y', this.get('y') - 1);
+        };
     },
 
     left: function() {
-      if(this.get('x') > 0){
-        this.set('x', this.get('x') - 1);
-      };
+        if (this.get('x') > 0) {
+            this.set('x', this.get('x') - 1);
+        };
     },
 
     right: function() {
-      if(this.get('x') < 10){
-        this.set('x', this.get('x') + 1);
-      };
+        if (this.get('x') < 10) {
+            this.set('x', this.get('x') + 1);
+        };
     },
 
     decreaseEnergy: function() {
-      if(this.get('energy')> 0){
-            if(this.get('size') === 'small'){
-              this.set('energy', this.get('energy') - 1)
-            } else if (this.get('size') === 'large'){
-              this.set('energy', this.get('energy') - 2)
-            } else {
-              this.set('energy', this.get('energy') -1)
-            }
-          } else {
-            console.log(`you  are out of energy: ${this.get('energy')}`);
+        if (this.get('startingEnergy') > 0) {
+            this.set('startingEnergy', this.get('startingEnergy') - this.get('energyPerMove'))
+        } else {
+            console.log(`you  are out of energy: ${this.get('startingEnergy')}`);
             this.trigger('death', this.model);
-          }
+        }
 
     },
-    changeMoves: function(){
-        this.set('moves', this.get('moves')+1)
+    changeScore: function() {
+        this.set('score', this.get('score') + 1)
     },
 
-    setPlayer: function(){
-      this.set('name', document.getElementById('name').value);
-      this.set('playerType', event.target.textContent)
-// luke wrote this:
-      let target = this.types.find(function (type) {
-        return type.get('name') === event.target.textContent;
-      });
+    setPlayer: function() {
+        // luke wrote this:
+        let target = this.types.find(function(type) {
+            return type.get('name') === event.target.textContent;
+        });
+        // end of lukes stuff
+        console.log(target.get('startingEnergy'));
+        this.set('name', document.getElementById('name').value);
+        this.set('playerType', event.target.textContent)
+        this.set('startingEnergy',  target.get('startingEnergy'));
+        this.set('energyPerMove', target.get('energyPerMove'));
+        this.set('x', Math.ceil(Math.random() * 10));
+        this.set('y', Math.ceil(Math.random() * 10));
+        this.set('score', 0);
     },
 
-    getPlayers: function(){
-      this.types.getPlayersFromserver();
+    getPlayers: function() {
+        console.log('tell collection to get players');
+        this.types.getPlayersFromserver();
     },
-    sendScore: function(){
-      let highscore = new HighScore({
-        name: this.get('name'),
-        score: this.get('score'),
-        playerType: this.get('playerType')
-      });
-      highscore.save();
+    sendScore: function() {
+        let highscore = new HighScore({
+            name: this.get('name'),
+            score: this.get('score'),
+            playerType: this.get('playerType')
+        });
+        highscore.save();
     },
 
 });
@@ -128,9 +131,11 @@ module.exports = Backbone.Collection.extend({
     model: Types,
 
     getPlayersFromserver: function() {
+      console.log('ask server for players');
       let self = this;
         this.fetch({
           success: function(){
+            console.log('server gave us players');
             self.trigger('newtypes', this.model);
           }
         });
@@ -194,22 +199,22 @@ module.exports = Backbone.Router.extend({
     },
 
     newPlayer: function() {
-        console.log('make a new player');
+        // console.log('make a new player');
         this.user.el.classList.remove('hidden');
         this.game.el.classList.add('hidden');
         this.endGame.el.classList.add('hidden');
-        this.trigger('load', this.model);
+        // this.trigger('load', this.model);
     },
 
     gameStart: function() {
-        console.log('play the game');
+        // console.log('play the game');
         this.game.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.endGame.el.classList.add('hidden');
     },
 
     gameOver: function() {
-        console.log('you are out of energy');
+        // console.log('you are out of energy');
         this.endGame.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.game.el.classList.add('hidden');
@@ -225,6 +230,7 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.model.types.on('newtypes', this.render, this);
+        console.log('tell model to get players from collection');
         this.model.getPlayers();
     },
 
@@ -237,7 +243,7 @@ module.exports = Backbone.View.extend({
 
 
     startGame: function(event) {
-      // console.log(event.target.textContent);
+      console.log(event.target.textContent);
       this.model.setPlayer();
       this.trigger('start', this.model);
     },
@@ -264,58 +270,75 @@ module.exports = Backbone.View.extend({
 
 module.exports = Backbone.View.extend({
 
-  initialize: function () {
+    initialize: function() {
         this.model.on('change', this.render, this);
     },
 
     events: {
-      'click #up': 'clickUp',
-      'click #down': 'clickDown',
-      'click #left': 'clickLeft',
-      'click #right': 'clickRight',
-      'click button': 'changeEnergy',
-      'click #newPlayer': 'startOver',
+        'click #up': 'clickUp',
+        'click #down': 'clickDown',
+        'click #left': 'clickLeft',
+        'click #right': 'clickRight',
+        'click button': 'changeEnergy',
+        'click #newPlayer': 'startOver',
     },
 
-    clickUp: function(){
-      console.log('clicked up');
-      this.model.up();
+    clickUp: function() {
+        console.log('clicked up');
+        this.model.up();
     },
-    clickDown: function(){
-      console.log('clicked down');
-      this.model.down();
+    clickDown: function() {
+        console.log('clicked down');
+        this.model.down();
     },
-    clickLeft: function(){
-      console.log('clicked left');
-      this.model.left();
+    clickLeft: function() {
+        console.log('clicked left');
+        this.model.left();
     },
-    clickRight: function(){
-      console.log('clicked right');
-      this.model.right();
+    clickRight: function() {
+        console.log('clicked right');
+        this.model.right();
     },
 
-    changeEnergy: function(){
-      console.log('decrease');
+    changeEnergy: function() {
+        console.log('decrease');
         this.model.decreaseEnergy();
-        this.model.changeMoves();
+        this.model.changeScore();
     },
-    startOver: function(){
-      this.trigger('create', this.model);
+    startOver: function() {
+        this.trigger('create', this.model);
     },
 
 
-    render: function(){
-      let x = this.el.querySelector('#x');
-      x.textContent = this.model.get('x')+",";
+    render: function() {
+        let x = this.el.querySelector('#x');
+        x.textContent = this.model.get('x') + ",";
 
-      let y = this.el.querySelector('#y');
-      y.textContent = this.model.get('y');
+        let y = this.el.querySelector('#y');
+        y.textContent = this.model.get('y');
 
-      let newMoves = this.el.querySelector('#moves');
-      newMoves.textContent = "Moves:" + this.model.get('moves');
+        let newScore = this.el.querySelector('#score');
+        newScore.textContent = `Score: ${this.model.get('score')}`;
 
-      let character = this.el.querySelector('#character');
-      character.textContent = `Name: ${this.model.get('name')} Player Type:${this.model.get('playerType')}`
+        let character = this.el.querySelector('#character');
+        character.textContent = `Name: ${this.model.get('name')} Player Type:${this.model.get('playerType')}`;
+
+        let energy = this.el.querySelector('#energy');
+        energy.textContent = `Energy: ${this.model.get('startingEnergy')}`
+
+        let grid = this.el.querySelector('#grid');
+
+        // addCell =
+        //     for (let y = 0; y < this.get('gamesize'); y++) {
+        //         row = document.createElement('div');
+        //         for (let x = 0; x < this.get('gamesize'); x++) {
+        //             cell = document.createElement('div');
+        //         }
+        //     }
+
+
+
+
     }
 
 

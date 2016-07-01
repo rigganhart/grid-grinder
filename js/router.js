@@ -41,22 +41,22 @@ module.exports = Backbone.Router.extend({
     },
 
     newPlayer: function() {
-        console.log('make a new player');
+        // console.log('make a new player');
         this.user.el.classList.remove('hidden');
         this.game.el.classList.add('hidden');
         this.endGame.el.classList.add('hidden');
-        this.trigger('load', this.model);
+        // this.trigger('load', this.model);
     },
 
     gameStart: function() {
-        console.log('play the game');
+        // console.log('play the game');
         this.game.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.endGame.el.classList.add('hidden');
     },
 
     gameOver: function() {
-        console.log('you are out of energy');
+        // console.log('you are out of energy');
         this.endGame.el.classList.remove('hidden');
         this.user.el.classList.add('hidden');
         this.game.el.classList.add('hidden');
