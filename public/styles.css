@@ -55,3 +55,41 @@
   background-color: grey;
   height: 250px;
   width: 250px; }
+
+.row {
+  display: block;
+  width: 98%;
+  height: 9%;
+  margin: 1%;
+  background-color: black; }
+
+.col {
+  display: inline-block;
+  width: 8%;
+  height: 80%;
+  background-color: white;
+  margin: 1%; }
+
+.player {
+  display: inline-block;
+  width: 8%;
+  height: 80%;
+  border-radius: 100%;
+  margin: 1%;
+  background-color: blue; }
+
+.powerup {
+  display: inline-block;
+  width: 8%;
+  height: 80%;
+  border-radius: 15%;
+  margin: 1%;
+  background-color: green; }
+
+.boost {
+  display: inline-block;
+  width: 9%;
+  height: 85%;
+  border-radius: 50%;
+  margin: 1%;
+  background-color: red; }

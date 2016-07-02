@@ -5,6 +5,10 @@ module.exports = Backbone.View.extend({
 
   initialize: function () {
         this.model.on('change', this.render, this);
+        this.model.getScoresCollection();
+        this.model.scoreList.on('highscores', this.render, this);
+
+
     },
 
     events: {
@@ -18,8 +22,16 @@ module.exports = Backbone.View.extend({
     },
 
     render: function(){
-      let highScores = this.el.querySelector('#score-list');
+      let playerScore = this.el.querySelector('#playerScore');
+      playerScore.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
 
-      highScores.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
+      var listOfScores = this.el.querySelector('#scoreList');
+      this.model.scoreList.forEach(function(element){
+        // console.log(element.get('name'));
+        var score = document.createElement('li');
+        score.textContent = `Name: ${element.get('name')}, Score: ${element.get('score')}, Player Type: ${element.get('playerType')}`;
+        // console.log(listOfScores);
+        listOfScores.appendChild(score);
+      });
     }
 });

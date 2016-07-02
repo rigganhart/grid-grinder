@@ -7,6 +7,7 @@ module.exports = Backbone.View.extend({
         this.model.types.on('newtypes', this.render, this);
         console.log('tell model to get players from collection');
         this.model.getPlayers();
+        // this.model.getScoresCollection();
     },
 
     events: {
@@ -20,6 +21,7 @@ module.exports = Backbone.View.extend({
     startGame: function(event) {
       console.log(event.target.textContent);
       this.model.setPlayer();
+      this.model.setBoost();
       this.trigger('start', this.model);
     },
 

@@ -9,17 +9,6 @@ window.addEventListener('load', function(){
 });
 
 },{"./router":7}],2:[function(require,module,exports){
-let HighScore = require('./highscore');
-
-module.exports = Backbone.Collection.extend({
-    url: 'http://grid.queencityiron.com/api/highscore',
-    model: HighScore,
-    getHighscoreFromServer: function() {
-        this.fetch();
-    },
-});
-
-},{"./highscore":3}],3:[function(require,module,exports){
 
 
 module.exports = Backbone.Model.extend({
@@ -34,14 +23,37 @@ defaults: {
 
 });
 
-},{}],4:[function(require,module,exports){
-let HighScores = require("./highscore.collection");
+},{}],3:[function(require,module,exports){
+let HighScore = require('./highscore');
+
+module.exports = Backbone.Collection.extend({
+    url: 'http://grid.queencityiron.com/api/highscore',
+    model: HighScore,
+    getHighscoreFromServer: function() {
+      console.log('ask server for scores');
+      let self = this;
+        this.fetch({
+          success: function(){
+            console.log('server gave highscores');
+            self.trigger('highscores', this.model);
+          }
+        });
+    },
+    sendHighScore: function(){
+        ``
+      self.save()
+    },
+});
+
+},{"./highscore":2}],4:[function(require,module,exports){
+let HighScores = require("./highscorecollection");
 let PlayerTypes = require("./types")
 
 module.exports = Backbone.Model.extend({
 
     initialize: function() {
         this.types = new PlayerTypes();
+        this.scoreList = new HighScores();
     },
     defaults: {
         gamesize: 10,
@@ -52,15 +64,18 @@ module.exports = Backbone.Model.extend({
         score: 0,
         x: 0,
         y: 0,
+        powerY:0,
+        powerX:0,
+        boostAmmount:10,
     },
 
-    up: function() {
+    down: function() {
         if (this.get('y') < 10) {
             this.set('y', this.get('y') + 1);
         };
     },
 
-    down: function() {
+    up: function() {
         if (this.get('y') > 0) {
             this.set('y', this.get('y') - 1);
         };
@@ -105,8 +120,16 @@ module.exports = Backbone.Model.extend({
         this.set('x', Math.ceil(Math.random() * 10));
         this.set('y', Math.ceil(Math.random() * 10));
         this.set('score', 0);
-    },
 
+    },
+    setBoost: function(){
+      this.set('powerY', Math.ceil(Math.random() * 10));
+      this.set('powerX', Math.ceil(Math.random() * 10));
+      this.set('boostAmmount', Math.ceil(Math.random() * 30));
+    },
+    addEnergy: function(){
+      this.set('startingEnergy', this.get('startingEnergy')+this.get('boostAmmount'));
+    },
     getPlayers: function() {
         console.log('tell collection to get players');
         this.types.getPlayersFromserver();
@@ -117,12 +140,15 @@ module.exports = Backbone.Model.extend({
             score: this.get('score'),
             playerType: this.get('playerType')
         });
-        highscore.save();
+        this.scoreList.sendHighScore();
+    },
+    getScoresCollection: function(){
+      this.scoreList.getHighscoreFromServer();
     },
 
 });
 
-},{"./highscore.collection":2,"./types":5}],5:[function(require,module,exports){
+},{"./highscorecollection":3,"./types":5}],5:[function(require,module,exports){
 let Types = require('./types.model');
 
 
@@ -232,6 +258,7 @@ module.exports = Backbone.View.extend({
         this.model.types.on('newtypes', this.render, this);
         console.log('tell model to get players from collection');
         this.model.getPlayers();
+        // this.model.getScoresCollection();
     },
 
     events: {
@@ -245,6 +272,7 @@ module.exports = Backbone.View.extend({
     startGame: function(event) {
       console.log(event.target.textContent);
       this.model.setPlayer();
+      this.model.setBoost();
       this.trigger('start', this.model);
     },
 
@@ -272,6 +300,7 @@ module.exports = Backbone.View.extend({
 
     initialize: function() {
         this.model.on('change', this.render, this);
+        this.on('boost', this.moveBoost, this);
     },
 
     events: {
@@ -281,6 +310,7 @@ module.exports = Backbone.View.extend({
         'click #right': 'clickRight',
         'click button': 'changeEnergy',
         'click #newPlayer': 'startOver',
+        'boost' : 'moveBoost',
     },
 
     clickUp: function() {
@@ -308,7 +338,11 @@ module.exports = Backbone.View.extend({
     startOver: function() {
         this.trigger('create', this.model);
     },
-
+    moveBoost: function(){
+      console.log('should move boost and add energy');
+      this.model.setBoost();
+      this.model.addEnergy();
+    },
 
     render: function() {
         let x = this.el.querySelector('#x');
@@ -325,16 +359,32 @@ module.exports = Backbone.View.extend({
 
         let energy = this.el.querySelector('#energy');
         energy.textContent = `Energy: ${this.model.get('startingEnergy')}`
-
+// Thanks to Geoff for help with the grid:
         let grid = this.el.querySelector('#grid');
+        grid.innerHTML = "";
 
-        // addCell =
-        //     for (let y = 0; y < this.get('gamesize'); y++) {
-        //         row = document.createElement('div');
-        //         for (let x = 0; x < this.get('gamesize'); x++) {
-        //             cell = document.createElement('div');
-        //         }
-        //     }
+        for (let y = 0; y < this.model.get('gamesize'); y++) {
+            var row = document.createElement('div');
+            row.classList.add('row')
+            for (let x = 0; x < this.model.get('gamesize'); x++) {
+                var col = document.createElement('div');
+                col.classList.add('col')
+                if(this.model.get('y') === y && this.model.get('x') === x){
+                  col.classList.add('player');
+                }
+                if(this.model.get('powerY') === y && this.model.get('powerX') === x){
+                  col.classList.add('powerup');
+                }
+                if(this.model.get('y')===this.model.get('powerY') && this.model.get('x')=== this.model.get('powerX')) {
+                  
+                  let self= this;
+                  self.trigger('boost', this.model);
+                }
+
+                row.appendChild(col);
+            }
+            grid.appendChild(row);
+        }
 
 
 
@@ -353,6 +403,10 @@ module.exports = Backbone.View.extend({
 
   initialize: function () {
         this.model.on('change', this.render, this);
+        this.model.getScoresCollection();
+        this.model.scoreList.on('highscores', this.render, this);
+
+
     },
 
     events: {
@@ -366,9 +420,17 @@ module.exports = Backbone.View.extend({
     },
 
     render: function(){
-      let highScores = this.el.querySelector('#score-list');
+      let playerScore = this.el.querySelector('#playerScore');
+      playerScore.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
 
-      highScores.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
+      var listOfScores = this.el.querySelector('#scoreList');
+      this.model.scoreList.forEach(function(element){
+        // console.log(element.get('name'));
+        var score = document.createElement('li');
+        score.textContent = `Name: ${element.get('name')}, Score: ${element.get('score')}, Player Type: ${element.get('playerType')}`;
+        // console.log(listOfScores);
+        listOfScores.appendChild(score);
+      });
     }
 });
 
