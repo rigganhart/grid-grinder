@@ -118,6 +118,10 @@ module.exports = Backbone.Model.extend({
         }
 
     },
+    moveBaddie: function(){
+      this.set('badY', Math.ceil(Math.random() * 10));
+      this.set('badX', Math.ceil(Math.random() * 10));
+    },
 
     changeScore: function() {
         this.set('score', this.get('score') + 10)
@@ -142,7 +146,7 @@ module.exports = Backbone.Model.extend({
     setBoost: function(){
       this.set('powerY', Math.ceil(Math.random() * 10));
       this.set('powerX', Math.ceil(Math.random() * 10));
-      this.set('boostAmmount', Math.ceil(Math.random() * 30));
+      this.set('boostAmmount', Math.ceil(Math.random() * 10));
     },
     addEnergy: function(){
       this.set('startingEnergy', this.get('startingEnergy')+this.get('boostAmmount'));
@@ -317,7 +321,7 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.on('boost', this.moveBoost, this);
-        // this.on('hurt', this.takeDamage,this);
+        this.on('hurt', this.takeDamage,this);
     },
 
     events: {
@@ -327,7 +331,6 @@ module.exports = Backbone.View.extend({
         'click #right': 'clickRight',
         'click button': 'changeEnergy',
         'click #newPlayer': 'startOver',
-        // 'boost' : 'moveBoost',
     },
 
     clickUp: function() {
@@ -363,6 +366,7 @@ module.exports = Backbone.View.extend({
     takeDamage: function(){
       console.log("view says to do damage");
       this.model.damagePlayer();
+      this.model.moveBaddie();
     },
 
     render: function() {

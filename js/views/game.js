@@ -6,7 +6,7 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.on('boost', this.moveBoost, this);
-        // this.on('hurt', this.takeDamage,this);
+        this.on('hurt', this.takeDamage,this);
     },
 
     events: {
@@ -16,7 +16,6 @@ module.exports = Backbone.View.extend({
         'click #right': 'clickRight',
         'click button': 'changeEnergy',
         'click #newPlayer': 'startOver',
-        // 'boost' : 'moveBoost',
     },
 
     clickUp: function() {
@@ -52,6 +51,7 @@ module.exports = Backbone.View.extend({
     takeDamage: function(){
       console.log("view says to do damage");
       this.model.damagePlayer();
+      this.model.moveBaddie();
     },
 
     render: function() {
