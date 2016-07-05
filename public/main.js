@@ -40,8 +40,13 @@ module.exports = Backbone.Collection.extend({
         });
     },
     sendHighScore: function(){
-        ``
-      self.save()
+      this.save({
+        success: function(){
+          console.log("saved");
+          this.getHighscoreFromServer();
+        }
+      })
+
     },
 });
 
@@ -55,6 +60,7 @@ module.exports = Backbone.Model.extend({
         this.types = new PlayerTypes();
         this.scoreList = new HighScores();
     },
+    url:'http://grid.queencityiron.com/api/highscore',
     defaults: {
         gamesize: 10,
         name: "DumDum",
@@ -67,6 +73,8 @@ module.exports = Backbone.Model.extend({
         powerY:0,
         powerX:0,
         boostAmmount:10,
+        badY:0,
+        badX:5,
     },
 
     down: function() {
@@ -92,6 +100,14 @@ module.exports = Backbone.Model.extend({
             this.set('x', this.get('x') + 1);
         };
     },
+    damagePlayer: function(){
+      console.log('model damages');
+      if(this.get('startingEnergy') <= 20){
+        this.trigger('death', this.model);
+      } else {
+      this.set('startingEnergy', this.get('startingEnergy')- 20);
+    }
+    },
 
     decreaseEnergy: function() {
         if (this.get('startingEnergy') > 0) {
@@ -102,8 +118,9 @@ module.exports = Backbone.Model.extend({
         }
 
     },
+
     changeScore: function() {
-        this.set('score', this.get('score') + 1)
+        this.set('score', this.get('score') + 10)
     },
 
     setPlayer: function() {
@@ -135,12 +152,11 @@ module.exports = Backbone.Model.extend({
         this.types.getPlayersFromserver();
     },
     sendScore: function() {
-        let highscore = new HighScore({
-            name: this.get('name'),
-            score: this.get('score'),
-            playerType: this.get('playerType')
-        });
-        this.scoreList.sendHighScore();
+      // got help from logan
+
+            this.save(),
+            this.scoreList.getHighscoreFromServer();
+
     },
     getScoresCollection: function(){
       this.scoreList.getHighscoreFromServer();
@@ -301,6 +317,7 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.on('boost', this.moveBoost, this);
+        // this.on('hurt', this.takeDamage,this);
     },
 
     events: {
@@ -310,7 +327,7 @@ module.exports = Backbone.View.extend({
         'click #right': 'clickRight',
         'click button': 'changeEnergy',
         'click #newPlayer': 'startOver',
-        'boost' : 'moveBoost',
+        // 'boost' : 'moveBoost',
     },
 
     clickUp: function() {
@@ -342,6 +359,10 @@ module.exports = Backbone.View.extend({
       console.log('should move boost and add energy');
       this.model.setBoost();
       this.model.addEnergy();
+    },
+    takeDamage: function(){
+      console.log("view says to do damage");
+      this.model.damagePlayer();
     },
 
     render: function() {
@@ -375,10 +396,19 @@ module.exports = Backbone.View.extend({
                 if(this.model.get('powerY') === y && this.model.get('powerX') === x){
                   col.classList.add('powerup');
                 }
+  // end of geoffs help
                 if(this.model.get('y')===this.model.get('powerY') && this.model.get('x')=== this.model.get('powerX')) {
-                  
+
                   let self= this;
                   self.trigger('boost', this.model);
+                }
+                if(this.model.get('badX')=== x && this.model.get('badY') === y){
+                  col.classList.add('baddie');
+                }
+                if(this.model.get('y')===this.model.get('badY') && this.model.get('x')=== this.model.get('badX')) {
+                  console.log("tirgger damage event");
+                  let self= this;
+                  self.trigger('hurt', this.model);
                 }
 
                 row.appendChild(col);
@@ -424,12 +454,15 @@ module.exports = Backbone.View.extend({
       playerScore.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
 
       var listOfScores = this.el.querySelector('#scoreList');
-      this.model.scoreList.forEach(function(element){
+      listOfScores.innerHTML = "";
+      this.model.scoreList.forEach(function(element, idx){
+        if (idx < 5) {
         // console.log(element.get('name'));
         var score = document.createElement('li');
-        score.textContent = `Name: ${element.get('name')}, Score: ${element.get('score')}, Player Type: ${element.get('playerType')}`;
+        score.textContent = `${element.get('name')}---Score: ${element.get('score')}--- Player Type: ${element.get('playerType')}`;
         // console.log(listOfScores);
         listOfScores.appendChild(score);
+      }
       });
     }
 });

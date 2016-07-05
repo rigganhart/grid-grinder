@@ -1,24 +1,35 @@
 .hidden {
   display: none; }
 
+body {
+  background-color: grey; }
+
+.instructions {
+  text-align: center; }
+
+.playerCreator {
+  width: 20%;
+  margin: 0 auto;
+  display: block; }
+
 .user {
-  width: 60%;
-  height: 400px;
-  display: inline-block;
+  width: 80%;
+  height: 600px;
+  display: block;
   background-color: blue;
   margin: 0 auto; }
 
 .game {
-  width: 60%;
-  height: 400px;
-  display: inline-block;
+  width: 80%;
+  height: 600px;
+  display: block;
   background-color: green;
   margin: 0 auto; }
 
 .end {
-  width: 60%;
-  height: 400px;
-  display: inline-block;
+  width: 80%;
+  height: 600px;
+  display: block;
   background-color: black;
   margin: 0 auto;
   color: white; }
@@ -52,16 +63,16 @@
   float: left; }
 
 .grid {
-  background-color: grey;
-  height: 250px;
-  width: 250px; }
+  display: block;
+  height: 50%;
+  width: 50%;
+  margin: 0 auto; }
 
 .row {
   display: block;
-  width: 98%;
-  height: 9%;
-  margin: 1%;
-  background-color: black; }
+  width: 100%;
+  height: 10%;
+  background-color: grey; }
 
 .col {
   display: inline-block;
@@ -78,6 +89,14 @@
   margin: 1%;
   background-color: blue; }
 
+.baddie {
+  display: inline-block;
+  width: 8%;
+  height: 80%;
+  border-radius: 75%;
+  margin: 1%;
+  background-color: red; }
+
 .powerup {
   display: inline-block;
   width: 8%;
@@ -93,3 +112,20 @@
   border-radius: 50%;
   margin: 1%;
   background-color: red; }
+
+.main h1 {
+  text-align: center;
+  font-size: 3em; }
+
+.main h2 {
+  text-align: center;
+  font-size: 2em; }
+
+.scoreList {
+  display: block;
+  width: 40%;
+  float: right;
+  border: 2px solid white; }
+
+.scoreList h1 {
+  text-align: center; }

@@ -10,68 +10,84 @@
 <body>
     <div id="user" class="hidden">
         <div class="user">
-            <h1>Enter Your Name:</h1>
-            <input type="text" id="name" name="name" placeholder="name">
-          <div id="playerType" class="characters">
+            <div class="instructions">
+               <h1>Welcome to GridGrinder</h1>
+                <h4>You are the blue dot!</h4>
+                <h4>Stay alive to get the highest score!</h4>
+                <h4>Reach the green square to increase energy!</h4>
+                <h4>Avoid the red dot!</h4>
+                <h6>--HINT-- explore the grid for hidden areas!</h6>
+            </div>
 
-          </div>
+
+            <div class="playerCreator">
+
+
+                <h3>Enter Your Name:</h3>
+                <input type="text" id="name" name="name" placeholder="name">
+                <h3>Choose Your Player:</h3>
+                <div id="playerType" class="characters">
+
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="game" class="hidden">
         <div class="game">
-          <div class="top">
-            <div id="character" class="character">
-
-            </div>
-            <div id='energy' class="energy">
-
-            </div>
-            <div id="score" class="moves">
-
-            </div>
-            <div id="position">
-                <h3>Position:</h3>
-                <div class="coords" id="x">
+            <div class="top">
+                <div id="character" class="character">
 
                 </div>
-                <div class='coords' id="y">
+                <div id='energy' class="energy">
 
                 </div>
+                <div id="score" class="moves">
+
+                </div>
+                <div id="position">
+                    <h3>Position:</h3>
+                    <div class="coords" id="x">
+
+                    </div>
+                    <div class='coords' id="y">
+
+                    </div>
+                </div>
             </div>
-          </div>
-          <div id="grid" class="grid">
-          </div>
-        <div class="controlls">
-            <div id="buttons">
-                <button type="button" id="up">UP</button>
-                <button type="button" id="down">DOWN</button>
-                <button type="button" id="left">LEFT</button>
-                <button type="button" id="right">RIGHT</button>
+            <div id="grid" class="grid">
             </div>
-            <button class="newPlayer" id="newPlayer" type="button" name="create">Create a new player></button>
-          </div>
+            <div class="controlls">
+                <div id="buttons">
+                    <button type="button" id="up">UP</button>
+                    <button type="button" id="down">DOWN</button>
+                    <button type="button" id="left">LEFT</button>
+                    <button type="button" id="right">RIGHT</button>
+                </div>
+                <button class="newPlayer" id="newPlayer" type="button" name="create">Create a new player></button>
+            </div>
         </div>
     </div>
     <div id="game-over" class="hidden">
-      <div class="end">
-        <div class="main">
+        <div class="end">
+            <div class="main">
 
 
-        <h1>GameOver</h1>
-        <h2>Bwahahahahaha</h2>
-        <a href="#anew">Try Again !</a>
-        <button type="button" id="add-scores" name="button">Add High Score</button>
-      </div>
-      <div id="playerScore"class="high-score">
+                <h1>GameOver</h1>
+                <h2>Bwahahahahaha</h2>
+                <a href="#anew">Try Again !</a>
+                <button type="button" id="add-scores" name="button">Add High Score</button>
+            </div>
+            <div id="playerScore" class="high-score">
 
-      </div>
-        <div class="scoreList">
-          <ul id="scoreList">
-            
-          </ul>
+            </div>
+            <div class="scoreList">
+                <h1>Top Five Scores</h1>
+                <ol id="scoreList">
+
+                </ol>
+            </div>
         </div>
-      </div>
     </div>
 
     <script src="http://underscorejs.org/underscore-min.js"></script>

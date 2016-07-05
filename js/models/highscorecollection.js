@@ -14,7 +14,12 @@ module.exports = Backbone.Collection.extend({
         });
     },
     sendHighScore: function(){
-        ``
-      self.save()
+      this.save({
+        success: function(){
+          console.log("saved");
+          this.getHighscoreFromServer();
+        }
+      })
+
     },
 });

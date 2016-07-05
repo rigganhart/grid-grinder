@@ -26,12 +26,15 @@ module.exports = Backbone.View.extend({
       playerScore.textContent = `Name: ${this.model.get('name')} Score: ${this.model.get('score')} Type: ${this.model.get('playerType')} `;
 
       var listOfScores = this.el.querySelector('#scoreList');
-      this.model.scoreList.forEach(function(element){
+      listOfScores.innerHTML = "";
+      this.model.scoreList.forEach(function(element, idx){
+        if (idx < 5) {
         // console.log(element.get('name'));
         var score = document.createElement('li');
-        score.textContent = `Name: ${element.get('name')}, Score: ${element.get('score')}, Player Type: ${element.get('playerType')}`;
+        score.textContent = `${element.get('name')}---Score: ${element.get('score')}--- Player Type: ${element.get('playerType')}`;
         // console.log(listOfScores);
         listOfScores.appendChild(score);
+      }
       });
     }
 });

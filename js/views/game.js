@@ -6,6 +6,7 @@ module.exports = Backbone.View.extend({
     initialize: function() {
         this.model.on('change', this.render, this);
         this.on('boost', this.moveBoost, this);
+        // this.on('hurt', this.takeDamage,this);
     },
 
     events: {
@@ -15,7 +16,7 @@ module.exports = Backbone.View.extend({
         'click #right': 'clickRight',
         'click button': 'changeEnergy',
         'click #newPlayer': 'startOver',
-        'boost' : 'moveBoost',
+        // 'boost' : 'moveBoost',
     },
 
     clickUp: function() {
@@ -47,6 +48,10 @@ module.exports = Backbone.View.extend({
       console.log('should move boost and add energy');
       this.model.setBoost();
       this.model.addEnergy();
+    },
+    takeDamage: function(){
+      console.log("view says to do damage");
+      this.model.damagePlayer();
     },
 
     render: function() {
@@ -80,10 +85,19 @@ module.exports = Backbone.View.extend({
                 if(this.model.get('powerY') === y && this.model.get('powerX') === x){
                   col.classList.add('powerup');
                 }
+  // end of geoffs help
                 if(this.model.get('y')===this.model.get('powerY') && this.model.get('x')=== this.model.get('powerX')) {
-                  
+
                   let self= this;
                   self.trigger('boost', this.model);
+                }
+                if(this.model.get('badX')=== x && this.model.get('badY') === y){
+                  col.classList.add('baddie');
+                }
+                if(this.model.get('y')===this.model.get('badY') && this.model.get('x')=== this.model.get('badX')) {
+                  console.log("tirgger damage event");
+                  let self= this;
+                  self.trigger('hurt', this.model);
                 }
 
                 row.appendChild(col);

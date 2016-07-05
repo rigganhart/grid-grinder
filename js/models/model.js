@@ -7,6 +7,7 @@ module.exports = Backbone.Model.extend({
         this.types = new PlayerTypes();
         this.scoreList = new HighScores();
     },
+    url:'http://grid.queencityiron.com/api/highscore',
     defaults: {
         gamesize: 10,
         name: "DumDum",
@@ -19,6 +20,8 @@ module.exports = Backbone.Model.extend({
         powerY:0,
         powerX:0,
         boostAmmount:10,
+        badY:0,
+        badX:5,
     },
 
     down: function() {
@@ -44,6 +47,14 @@ module.exports = Backbone.Model.extend({
             this.set('x', this.get('x') + 1);
         };
     },
+    damagePlayer: function(){
+      console.log('model damages');
+      if(this.get('startingEnergy') <= 20){
+        this.trigger('death', this.model);
+      } else {
+      this.set('startingEnergy', this.get('startingEnergy')- 20);
+    }
+    },
 
     decreaseEnergy: function() {
         if (this.get('startingEnergy') > 0) {
@@ -54,8 +65,9 @@ module.exports = Backbone.Model.extend({
         }
 
     },
+
     changeScore: function() {
-        this.set('score', this.get('score') + 1)
+        this.set('score', this.get('score') + 10)
     },
 
     setPlayer: function() {
@@ -87,12 +99,11 @@ module.exports = Backbone.Model.extend({
         this.types.getPlayersFromserver();
     },
     sendScore: function() {
-        let highscore = new HighScore({
-            name: this.get('name'),
-            score: this.get('score'),
-            playerType: this.get('playerType')
-        });
-        this.scoreList.sendHighScore();
+      // got help from logan
+
+            this.save(),
+            this.scoreList.getHighscoreFromServer();
+
     },
     getScoresCollection: function(){
       this.scoreList.getHighscoreFromServer();
