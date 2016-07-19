@@ -53,8 +53,13 @@ module.exports = Backbone.View.extend({
       this.model.damagePlayer();
       this.model.moveBaddie();
     },
+    // startBaddie: function(){
+    //   this.model.moveBaddie();
+    // },
 
     render: function() {
+        // this.setInterval(startBaddie,500);
+
         let x = this.el.querySelector('#x');
         x.textContent = this.model.get('x') + ",";
 

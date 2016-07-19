@@ -121,6 +121,9 @@ module.exports = Backbone.Model.extend({
     moveBaddie: function(){
       this.set('badY', Math.ceil(Math.random() * 10));
       this.set('badX', Math.ceil(Math.random() * 10));
+      // if(this.get('badY') < 10){
+      //   this.set(this.get('badY'), this.get('badY') + 1);
+      // }
     },
 
     changeScore: function() {
@@ -368,8 +371,13 @@ module.exports = Backbone.View.extend({
       this.model.damagePlayer();
       this.model.moveBaddie();
     },
+    // startBaddie: function(){
+    //   this.model.moveBaddie();
+    // },
 
     render: function() {
+        // this.setInterval(startBaddie,500);
+
         let x = this.el.querySelector('#x');
         x.textContent = this.model.get('x') + ",";
 

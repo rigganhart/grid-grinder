@@ -68,6 +68,9 @@ module.exports = Backbone.Model.extend({
     moveBaddie: function(){
       this.set('badY', Math.ceil(Math.random() * 10));
       this.set('badX', Math.ceil(Math.random() * 10));
+      // if(this.get('badY') < 10){
+      //   this.set(this.get('badY'), this.get('badY') + 1);
+      // }
     },
 
     changeScore: function() {
