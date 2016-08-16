@@ -106,10 +106,13 @@ module.exports = Backbone.Model.extend({
         this.types.getPlayersFromserver();
     },
     sendScore: function() {
-      // got help from logan
-
-            this.save(),
-            this.scoreList.getHighscoreFromServer();
+        let self = this;
+            console.log("send high score");
+            this.save({},{
+              success: function(){
+              console.log("got response");
+              self.getScoresCollection();
+            }})
 
     },
     getScoresCollection: function(){

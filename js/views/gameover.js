@@ -18,7 +18,7 @@ module.exports = Backbone.View.extend({
 
     addScore: function(){
       this.model.sendScore();
-
+      // this.model.getScoresCollection();
     },
 
     render: function(){
