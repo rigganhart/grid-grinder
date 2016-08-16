@@ -47,6 +47,7 @@ module.exports = Backbone.View.extend({
       console.log('should move boost and add energy');
       this.model.setBoost();
       this.model.addEnergy();
+      this.model.moveBaddie();
     },
     takeDamage: function(){
       console.log("view says to do damage");

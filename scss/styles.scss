@@ -54,13 +54,11 @@ body {
 #position {
     display: inline-block;
 }
-.newPlayer {
-    display: inline-block;
-    float: right;
-}
+
 #buttons {
     display: inline-block;
-    float: left;
+    margin-left: 39%;
+    margin-top: 3%;
 }
 .grid {
     display: block;
@@ -129,4 +127,12 @@ background-color: grey;
 }
 .scoreList h1{
   text-align: center;
+}
+.top{
+  margin-bottom: 1%;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border: 2px solid;
+    border-radius: 5px;
 }
