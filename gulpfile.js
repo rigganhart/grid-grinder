@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var watch = require('gulp-watch');
 var browserify = require('gulp-browserify');
+var babel = require('gulp-babel')
 
 gulp.task('default',['html','css','js','watch'], function(){
 
@@ -21,6 +22,7 @@ gulp.task('css',function () {
 gulp.task('js', function () {
     gulp.src('./js/main.js')
         .pipe(browserify())
+        .pipe(babel())
         .pipe(gulp.dest('./public'));
 });
 
